@@ -10,6 +10,13 @@ module.exports = {
             test: /\.(js)$/,
             exclude: /node_modules/,
             options: { presets: ['@babel/env', '@babel/preset-react'], }
-        }, ]
+        },
+        {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              'css-loader'
+            ]
+          } ]
     }
 };

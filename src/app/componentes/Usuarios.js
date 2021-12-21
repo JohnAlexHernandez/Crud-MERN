@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './styles.css';
 
 class Usuarios extends Component {
   constructor() {
@@ -104,7 +105,7 @@ class Usuarios extends Component {
   iniciarSesion() {}
 
   registrarse(){
-        this.setState({isRegister: !this.state.isRegister});
+    this.setState({isRegister: !this.state.isRegister});
   }
 
   handleChange(e) {
@@ -112,7 +113,6 @@ class Usuarios extends Component {
     this.setState({
       [name]: value,
     });
-    console.log(value);
   }
 
   
@@ -128,32 +128,44 @@ class Usuarios extends Component {
                   <div className="row">
                     <div className="input-field col s12">
                       <input
+                        class="validate"
                         name="nombre"
                         onChange={this.handleChange}
                         type="text"
                         placeholder="Nombre usuario"
                         value={this.state.nombre}
+                        required 
+                        aria-required="true"
                       ></input>
+                      <span className="helper-text" data-error="Nombre usuario no válido" data-success="Nombre usuario válido">¡Los errores aparecen instantáneamente!</span>
                     </div>
 
                     <div className="input-field col s12">
                       <input
+                        class="validate"
                         name="email"
                         onChange={this.handleChange}
-                        type="text"
+                        type="email"
                         placeholder="Email usuario"
                         value={this.state.email}
+                        required 
+                        aria-required="true"
                       ></input>
+                      <span className="helper-text" data-error="Email no válido" data-success="Email válido">¡Los errores aparecen instantáneamente!</span>
                     </div>
 
                     <div className="input-field col s12">
                       <input
+                        class="validate"
                         name="contrasenia"
                         onChange={this.handleChange}
-                        type="text"
+                        type="password"
                         placeholder="Contraseña usuario"
                         value={this.state.contrasenia}
+                        required 
+                        aria-required="true"
                       ></input>
+                      <span className="helper-text" data-error="Contraseña no válida" data-success="Contraseña válida">¡Los errores aparecen instantáneamente!</span>
                     </div>
 
                     <button type="submit" className="btn light-blue darken-4">

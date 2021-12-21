@@ -1,4 +1,6 @@
 import React, { Component }  from 'react';
+import { Link } from "react-router-dom";
+import './styles.css';
 
 class Categorias extends Component {
 
@@ -9,10 +11,14 @@ class Categorias extends Component {
             _id: '',
             nombre: '',
             descripcion: '',
+            search: '',
+            productos: [],
             categorias: []
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
         this.addCategoria = this.addCategoria.bind(this);
+        this.viewProducts = this.viewProducts.bind(this);
     }
 
     addCategoria(e){
@@ -66,8 +72,13 @@ class Categorias extends Component {
         this.fetchCategorias();
     }
 
+    viewProducts(id){
+        localStorage.setItem("idCategoria", id);
+        console.log(id);
+    }
+
     fetchCategorias(){
-        fetch('/api/categoria/' + localStorage.getItem("id"))
+        fetch('/api/categoria/user/' + localStorage.getItem("id"))
         .then(res => res.json())
         .then(data => {
             this.setState({ categorias: data});
@@ -113,7 +124,13 @@ class Categorias extends Component {
         this.setState({
             [name]: value
         });
-        console.log(value)
+    }
+
+    handleSearch(e){
+        console.log(e.target.value);
+        this.setState({
+            search: e.target.value
+        });
     }
 
     render() {
@@ -129,11 +146,13 @@ class Categorias extends Component {
                                                 {this.id}
                                             </div>
                                             <div className='input-field col s12'>
-                                                <input name='nombre' onChange={this.handleChange} type='text' placeholder='Nombre categoria' value={this.state.nombre}></input>
+                                                <input class="validate" id="nombre" name='nombre' onChange={this.handleChange} type='text' placeholder='Nombre categoria' value={this.state.nombre} required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Nombre categoría válido" data-success="Nombre categoría válido">¡Los errores aparecen instantáneamente!</span>
                                             </div>
 
                                             <div className='input-field col s12'>
-                                                <input name='descripcion' onChange={this.handleChange} type='text' placeholder='Descipcion categoria' value={this.state.descripcion}></input>
+                                                <input class="validate" name='descripcion' onChange={this.handleChange} type='text' placeholder='Descripcion categoria' value={this.state.descripcion} required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Descripción categoría no válida" data-success="Descripción categoría válida">¡Los errores aparecen instantáneamente!</span>
                                             </div>
 
                                             <button type='submit' className='btn light-blue darken-4'>
@@ -145,16 +164,30 @@ class Categorias extends Component {
                             </div>
                         </div>
                         <div className='col s7'>
+                            <div className='search'>
+                                <input id="search" type="text" placeholder='search...' onChange={this.handleSearch} />
+                            </div>
+
                             <table>
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
                                         <th>Descripcion</th>
+                                        <th>Editar</th>
+                                        <th>Eliminar</th>
+                                        <th>Ver productos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.categorias.map(categoria => {
+                                        this.state.categorias.filter((categoria) => {
+                                            if(this.state.search ==''){
+                                                return categoria;
+                                            }
+                                            else if(categoria.nombre.toLowerCase().includes(this.state.search.toLowerCase()) || categoria.descripcion.toLowerCase().includes(this.state.search.toLowerCase())){
+                                                return categoria;
+                                            }
+                                        }).map(categoria => {
                                             return(
                                                 <tr key={categoria._id}>
                                                     <td>{categoria.nombre}</td>
@@ -163,9 +196,18 @@ class Categorias extends Component {
                                                         <button className='btn light-blue darken-4' onClick={() => this.editCategoria(categoria._id)}>
                                                             <i className='material-icons'>edit</i>         
                                                         </button>
+                                                    </td>
+                                                    <td>
                                                         <button className='btn light-blue darken-4' onClick={() => this.deleteCategoria(categoria._id)} style={{margin: '4px'}}>
                                                             <i className='material-icons'>delete</i>         
                                                         </button>
+                                                    </td>
+                                                    <td>
+                                                        <Link to='/productos'>
+                                                            <button className='btn light-blue darken-4' onClick={() => this.viewProducts(categoria._id)} style={{margin: '4px'}}>
+                                                                <i className='material-icons'>visibility</i>         
+                                                            </button>
+                                                        </Link>
                                                     </td>
                                                 </tr>
                                             )      

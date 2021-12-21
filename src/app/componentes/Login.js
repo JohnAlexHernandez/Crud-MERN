@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { browserHistory } from 'react-router';
+import { Link } from "react-router-dom";
+import './styles.css';
 
 class Login extends Component {
-  
+
   constructor() {
     super();
 
@@ -108,13 +109,21 @@ class Login extends Component {
   }
 
   iniciarSesion(e) {
-    fetch("/api/usuario/" + this.state.email)
+    fetch("/api/usuario/signin", {
+      method: "POST",
+      body: JSON.stringify(this.state),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         M.toast({ html: "Inicio de sesión exitoso" });
         this.setState({ usuario: data });
         localStorage.setItem("id", data._id);
-      });
+      })
+      .catch((err) =>  M.toast({ html: "Inicio de sesión fallido" }));
     e.preventDefault();
   }
 
@@ -123,7 +132,6 @@ class Login extends Component {
     this.setState({
       [name]: value,
     });
-    console.log(value);
   }
 
   
@@ -138,26 +146,36 @@ class Login extends Component {
                         <form onSubmit={this.iniciarSesion}>
                         <div className="row">
                             <div className="input-field col s12">
-                            <input
-                                type="text"
-                                name="email"
-                                onChange={this.handleChange}
-                                placeholder="Email usuario"
-                                value={this.state.email}
-                            />
-                            </div>
+                              <i class="material-icons prefix">email</i>
+                              <input
+                                  class="validate"
+                                  type="email"
+                                  name="email"
+                                  onChange={this.handleChange}
+                                  placeholder="Email usuario"
+                                  value={this.state.email}
+                                  required 
+                                  aria-required="true"
+                              />
+                              <span className="helper-text" data-error="Email no válido" data-success="Email válido">¡Los errores aparecen instantáneamente!</span>
+                              </div>
                             <div className="input-field col s12">
-                            <input
-                                type="text"
-                                name="contrasenia"
-                                onChange={this.handleChange}
-                                placeholder="Contraseña usuario"
-                                value={this.state.contrasenia}
-                            />
+                              <i class="material-icons prefix">fingerprint</i>
+                              <input
+                                  class="validate"
+                                  type="password"
+                                  name="contrasenia"
+                                  onChange={this.handleChange}
+                                  placeholder="Contraseña usuario"
+                                  value={this.state.contrasenia}
+                                  required 
+                                  aria-required="true"
+                              />
+                              <span className="helper-text" data-error="Contraseña no válida" data-success="Contraseña válida">¡Los errores aparecen instantáneamente!</span>
                             </div>
-                            <button className="btn light-blue darken-4" type="submit">
-                            Iniciar Sesión
-                            </button>
+                                <button className="btn light-blue darken-4" type="submit">
+                                  Iniciar Sesión
+                                </button>
                         </div>
                         </form>
                     </div>

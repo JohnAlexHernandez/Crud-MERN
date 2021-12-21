@@ -28,9 +28,12 @@ routerUsuario.delete('/:id', async(req, res) => {
     res.json({ status: 'Usuario eliminated' });
 });
 
-routerUsuario.get('/:email', async(req, res) => {
-    const usuario = await Usuario.findOne({ 'email': req.params.email });
-    res.json(usuario);
+routerUsuario.post('/signin', async(req, res) => {
+    var { email, contrasenia } = req.body;
+    var usuario = await Usuario.findOne({ 'email': email });
+    if (!usuario) return res.status(401).send('El usuario no existe');
+    if (usuario.contrasenia !== contrasenia) return res.status(401).send('Contraseña incorrecta');
+    return res.json(usuario);
 });
 
 module.exports = routerUsuario;

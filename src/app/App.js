@@ -17,22 +17,26 @@ class App extends Component {
     this.logout = this.logout.bind(this);
   }
 
+  componentDidMount(){
+    if(localStorage.getItem("id")){
+      document.getElementById('categorias').style.display = "inline";
+    }
+}
+
   logout() {
     localStorage.setItem("id", "");
-    console.log(localStorage.getItem("id"));
     document.getElementById('categorias').style.display = "none";
-    document.getElementById('productos').style.display = "none";
     document.getElementById('logout').style.display = "none";
     document.getElementById('registrarse').style.display = "inline";
     document.getElementById('login').style.display = "inline";
   }
 
   login(){
-      document.getElementById('categorias').style.display = "inline";
-      document.getElementById('productos').style.display = "inline";
+    if(localStorage.getItem("id")){
       document.getElementById('logout').style.display = "inline";
       document.getElementById('registrarse').style.display = "none";
       document.getElementById('login').style.display = "none";
+    }
   }
 
   render() {
@@ -46,12 +50,11 @@ class App extends Component {
             <a href="#!" class="brand-logo center">Gestionar productos</a>
             <ul className="left hide-on-med-and-down">
                 <li><Link id="categorias" to="/categorias">Categorias</Link></li>
-                <li><Link id="productos" to="/productos">Productos</Link></li>
             </ul>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><Link id="registrarse" to="/usuarios">Registrarse</Link></li>
                 <li><Link id="login" to="/login" onClick={() => this.login()}>Login</Link></li>
-                <li><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></li>
+                <li><Link to='/login'><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></Link></li>
             </ul>
           </div>
         </nav>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Select from 'react-select';
+import { Link } from "react-router-dom";
+import './styles.css';
 
 class Productos extends Component {
 
@@ -12,10 +13,12 @@ class Productos extends Component {
             precio: '',
             cantidad: '',
             categoria: '',
+            search: '',
             categorias: [],
             productos: []
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
         this.changeSelect = this.changeSelect.bind(this);
         this.addProduct = this.addProduct.bind(this);
     }
@@ -47,7 +50,7 @@ class Productos extends Component {
             .catch(err => console.log(err));
             e.preventDefault();
         }else{
-            fetch('/api/producto/' + this.state.categoria, {
+            fetch('/api/producto/' + localStorage.getItem("idCategoria"), {
                 method: 'POST',
                 body: JSON.stringify(this.state),
                 headers: {
@@ -79,7 +82,7 @@ class Productos extends Component {
     }
 
     fetchProductos(){
-        fetch('/api/producto/' + localStorage.getItem("id"))
+        fetch('/api/producto/categoria/' + localStorage.getItem("idCategoria"))
         .then(res => res.json())
         .then(data => {
             this.setState({ productos: data});
@@ -126,7 +129,8 @@ class Productos extends Component {
                 nombre: data.nombre,
                 tipo: data.tipo,
                 precio: data.precio,
-                cantidad: data.cantidad
+                cantidad: data.cantidad,
+                categoria: localStorage.getItem("idCategoria")
             })
         });
     }
@@ -142,6 +146,12 @@ class Productos extends Component {
         });
     }
 
+    handleSearch(e){
+        this.setState({
+            search: e.target.value
+        });
+    }
+
     render() {
         return (
             <div className="container">
@@ -152,30 +162,30 @@ class Productos extends Component {
                                     <form onSubmit={this.addProduct}>
                                         <div className='row'>
                                             <div className='input-field col s12'>
-                                                <input name='nombre' onChange={this.handleChange} type='text' placeholder='Nombre producto' value={this.state.nombre}></input>
+                                                <input class="validate" name='nombre' onChange={this.handleChange} type='text' placeholder='Nombre producto' value={this.state.nombre} required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Nombre producto no válido" data-success="Nombre producto válido">¡Los errores aparecen instantáneamente!</span>
                                             </div>
 
                                             <div className='input-field col s12'>
-                                                <input name='tipo' onChange={this.handleChange} type='text' placeholder='Tipo producto' value={this.state.tipo}></input>
+                                                <input class="validate" name='tipo' onChange={this.handleChange} type='text' placeholder='Tipo producto' value={this.state.tipo} required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Tipo producto no válido" data-success="Tipo producto válido">¡Los errores aparecen instantáneamente!</span>
                                             </div>
 
                                             <div className='input-field col s12'>
-                                                <input name='precio' onChange={this.handleChange} type='number' placeholder='Precio producto' value={this.state.precio}></input>
+                                                <input class="validate" name='precio' onChange={this.handleChange} type='number' placeholder='Precio producto' value={this.state.precio} pattern="^[0-9]+" required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Precio producto no válido" data-success="Precio producto válido">¡Los errores aparecen instantáneamente!</span>
                                             </div>
 
                                             <div className='input-field col s12'>
-                                                <input name='cantidad' onChange={this.handleChange} type='number' placeholder='Cantidad producto' value={this.state.cantidad}></input>
+                                                <input class="validate" name='cantidad' onChange={this.handleChange} type='number' placeholder='Cantidad producto' value={this.state.cantidad} pattern="^[0-9]+" required aria-required="true"></input>
+                                                <span className="helper-text" data-error="Catidad producto no válido" data-success="Cantidad producto válido">¡Los errores aparecen instantáneamente!</span>
                                             </div>
-
-                                            <div className='input-field col s12'> 
-                                                <Select 
-                                                    onChange={this.changeSelect}
-                                                    options={this.state.categorias}
-                                                    getOptionLabel={(options) => options['nombre']}
-                                                    getOptionValue={(options) => options['_id']}
-                                                />
-                                            </div>
-                                            <button type='submit' className='btn light-blue darken-4'>
+                                            <Link to='/categorias'>
+                                                <button className='btn light-blue darken-4'>
+                                                    Volver a categorias         
+                                                </button>
+                                            </Link>
+                                            <button type='submit' className='btn light-blue darken-4' style={{margin: '4px'}}>
                                                 Enviar
                                             </button>
                                         </div>
@@ -184,6 +194,9 @@ class Productos extends Component {
                             </div>
                         </div>
                         <div className='col s7'>
+                            <div className='seacrh'>
+                                <input id="search" type="text" placeholder='search...' onChange={this.handleSearch} />
+                            </div>
                             <table>
                                 <thead>
                                     <tr>
@@ -191,11 +204,20 @@ class Productos extends Component {
                                         <th>Tipo</th>
                                         <th>Precio</th>
                                         <th>Cantidad</th>
+                                        <th>Editar</th>
+                                        <th>Eliminar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        this.state.productos.map(producto => {
+                                        this.state.productos.filter((producto) => {
+                                            if(this.state.search ==''){
+                                                return producto;
+                                            }
+                                            else if(producto.nombre.toLowerCase().includes(this.state.search.toLowerCase()) || producto.tipo.toLowerCase().includes(this.state.search.toLowerCase())){
+                                                return producto;
+                                            }
+                                        }).map(producto => {
                                             return(
                                                 <tr key={producto._id}>
                                                     <td>{producto.nombre}</td>
@@ -206,6 +228,8 @@ class Productos extends Component {
                                                         <button className='btn light-blue darken-4' onClick={() => this.editProduct(producto._id)}>
                                                             <i className='material-icons'>edit</i>         
                                                         </button>
+                                                    </td>
+                                                    <td>
                                                         <button className='btn light-blue darken-4' onClick={() => this.deleteProduct(producto._id)} style={{margin: '4px'}}>
                                                             <i className='material-icons'>delete</i>         
                                                         </button>

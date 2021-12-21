@@ -3,7 +3,7 @@ const routerCategoria = express.Router();
 const Categoria = require('../models/categoria');
 const Usuario = require('../models/usuario');
 
-routerCategoria.get('/:id', async(req, res) => {
+routerCategoria.get('/user/:id', async(req, res) => {
     await Categoria.find({ 'usuario': req.params.id }).populate('usuario').exec((err, categorias) => {
         if (res.status(200)) {
             res.json(categorias);

@@ -3,12 +3,9 @@ const router = express.Router();
 const Producto = require('../models/producto');
 const Categoria = require('../models/categoria');
 
-router.get('/:id', async(req, res) => {
-    await Producto.find()
-    .populate('categoria')
-    .exec((err, productos) => {
+router.get('/categoria/:id', async(req, res) => {
+    await Producto.find({ 'categoria': req.params.id }).populate('categoria').exec((err, productos) => {
         if (res.status(200)) {
-            console.log(productos);
             res.json(productos);
         }
     });
