@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+
 import './styles.css';
 
 class Login extends Component {
@@ -174,7 +174,7 @@ class Login extends Component {
                               <span className="helper-text" data-error="Contraseña no válida" data-success="Contraseña válida">¡Los errores aparecen instantáneamente!</span>
                             </div>
                                 <button className="btn light-blue darken-4" type="submit">
-                                  Iniciar Sesión
+                                 Iniciar Sesión
                                 </button>
                         </div>
                         </form>

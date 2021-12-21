@@ -21,7 +21,7 @@ class App extends Component {
     if(localStorage.getItem("id")){
       document.getElementById('categorias').style.display = "inline";
     }
-}
+  }
 
   logout() {
     localStorage.setItem("id", "");
@@ -45,13 +45,14 @@ class App extends Component {
       <div>
         {/* Navigation */}
 
-        <nav className="nav blue darken-4">
+        <nav className="nav-wrapper blue darken-4">
           <div className="nav-wrapper">
-            <a href="#!" class="brand-logo center">Gestionar productos</a>
+            <a href="/" class="brand-logo center">Gestionar productos</a>
+
             <ul className="left hide-on-med-and-down">
                 <li><Link id="categorias" to="/categorias">Categorias</Link></li>
             </ul>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <ul class="right hide-on-med-and-down">
                 <li><Link id="registrarse" to="/usuarios">Registrarse</Link></li>
                 <li><Link id="login" to="/login" onClick={() => this.login()}>Login</Link></li>
                 <li><Link to='/login'><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></Link></li>
