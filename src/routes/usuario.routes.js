@@ -33,6 +33,7 @@ routerUsuario.post('/signin', async(req, res) => {
     var usuario = await Usuario.findOne({ 'email': email });
     if (!usuario) return res.status(401).send('El usuario no existe');
     if (usuario.contrasenia !== contrasenia) return res.status(401).send('Contraseña incorrecta');
+    console.log(usuario);
     return res.json(usuario);
 });
 

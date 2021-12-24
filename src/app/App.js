@@ -17,12 +17,6 @@ class App extends Component {
     this.logout = this.logout.bind(this);
   }
 
-  componentDidMount(){
-    if(localStorage.getItem("id")){
-      document.getElementById('categorias').style.display = "inline";
-    }
-  }
-
   logout() {
     localStorage.setItem("id", "");
     document.getElementById('categorias').style.display = "none";
@@ -45,20 +39,24 @@ class App extends Component {
       <div>
         {/* Navigation */}
 
-        <nav className="nav-wrapper blue darken-4">
-          <div className="nav-wrapper">
-            <a href="/" class="brand-logo center">Gestionar productos</a>
-
-            <ul className="left hide-on-med-and-down">
-                <li><Link id="categorias" to="/categorias">Categorias</Link></li>
-            </ul>
-            <ul class="right hide-on-med-and-down">
-                <li><Link id="registrarse" to="/usuarios">Registrarse</Link></li>
-                <li><Link id="login" to="/login" onClick={() => this.login()}>Login</Link></li>
-                <li><Link to='/login'><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></Link></li>
-            </ul>
-          </div>
-        </nav>
+    <nav className="nav-wrapper blue darken-4">
+      <div className="nav-wrapper">
+        <a href="#!" class="brand-logo">Crud MERN</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul className="right hide-on-med-and-down">
+          <li className="active"><Link id="categorias" to="/categorias">Categorias</Link></li>
+          <li><Link id="registrarse" to="/usuarios">Registrarse</Link></li>
+          <li><Link id="login" to="/login">Login</Link></li>
+          <li><Link to='/login'><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></Link></li>
+        </ul>
+        <ul className="side-nav" id="mobile-demo">
+        <li className="active"><Link id="categorias" to="/categorias">Categorias</Link></li>
+        <li><Link id="registrarse" to="/usuarios">Registrarse</Link></li>
+        <li><Link id="login" to="/login">Login</Link></li>
+        <li><Link to='/login'><a id="logout" href="#" onClick={() => this.logout()}>Logout</a></Link></li>
+        </ul>
+      </div>
+    </nav>
         
         <Routes>
             <Route path="/productos" exact element={<Productos></Productos>} />

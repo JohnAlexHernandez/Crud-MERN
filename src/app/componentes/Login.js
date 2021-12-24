@@ -121,7 +121,12 @@ class Login extends Component {
       .then((data) => {
         M.toast({ html: "Inicio de sesión exitoso" });
         this.setState({ usuario: data });
+        console.log(data._id);
         localStorage.setItem("id", data._id);
+        document.getElementById('categorias').style.display = "inline";
+        document.getElementById('logout').style.display = "inline";
+        document.getElementById('registrarse').style.display = "none";
+        document.getElementById('login').style.display = "none";
       })
       .catch((err) =>  M.toast({ html: "Inicio de sesión fallido" }));
     e.preventDefault();
